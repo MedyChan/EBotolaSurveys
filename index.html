@@ -295,8 +295,7 @@
     </div>
 
     <script type="text/javascript">var submitted=false;</script>
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){}"></iframe>
-    <form id="player-entry" action="https://docs.google.com/forms/d/e/1FAIpQLSfHuxwibeQhmeXdBWqJfoOwHtgW9t6taUvbtM19E-WecZNxTw/formResponse"  target="hidden_iframe" onsubmit="submitted=true;">
+    
       <div class="text-center row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2 elements-wrapper">
         <!-- element -->
         <div class="col-6 col-md-4 cardWrapper">
@@ -524,27 +523,31 @@
         </div>
       </div>
 
-      <div style="display:none">
-        <input name="entry.334814958" type="text" class="input1" required>
-        <input name="entry.189544022" type="text" class="input2" required>
-        <input name="entry.1523262176" type="text" class="input3" required>
-        <input name="entry.1233148798" type="text" class="input4" required>
-        <input name="entry.2047413236" type="text" class="input5" required>
+
+     <script type="text/javascript">var submitted=false;</script>
+     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" ></iframe>
+     <form id="elmnts" action="https://docs.google.com/forms/d/e/1FAIpQLSfHuxwibeQhmeXdBWqJfoOwHtgW9t6taUvbtM19E-WecZNxTw/formResponse"  target="hidden_iframe" >
+      <div style="display: none;">
+        <input name="entry.334814958" type="text" id="input1" required>
+        <input name="entry.189544022" type="text" id="input2" required>
+        <input name="entry.1523262176" type="text" id="input3" required>
+        <input name="entry.1233148798" type="text" id="input4" required>
+        <input name="entry.2047413236" type="text" id="input5" required>
       </div>
-      <!-- Modal -->
-      <div class="modal fade" id="execModal" tabindex="-1" role="dialog" aria-labelledby="execModal" aria-hidden="true">
+       
+       <div class="modal fade" id="execModal" tabindex="-1" role="dialog" aria-labelledby="execModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">لقد بلغت الحد المسموح به من الخيارات في هذا الاستطلاع، هل تود تأكيد القائمة الحالية؟</h5>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" id="sendbtn">إرسال</button>
+              <button id="SendBTN" class="send-button" type="submit" value="Send">Envoyer</button>
             </div>
           </div>
         </div>
       </div>
-    </form>
+     </form>
   </div>
 
   <script>
@@ -553,7 +556,10 @@
       var unmarkedBoxCount = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
       var markedBoxCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
       var myModal;
-      var entries;
+      var entries = [];
+      const form = document.querySelector('form');
+      const sendbtn = document.getElementById('SendBTN');
+
 
       for (let i = 0; i < Checkboxes.length; i++)
         Checkboxes[i].addEventListener('click', (event) => {
@@ -563,11 +569,25 @@
           }
           checkboxLimiter();
         });
+
+
+        
+        sendbtn.addEventListener('click', event => {
+          console.log("prevented")
+        event.preventDefault();
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(el, index) {
+          entries[index]= el.getAttribute("headline");
+        })
+        console.log("Entries : ", entries) 
+        while (entries.length > 0){
+          document.getElementById('input'+ entries.length).value = entries.pop()
+        }
+
+        form.submit();
     });
 
-    document.getElementById("sendbtn").addEventListener('click', (event) => {
-      send();
     });
+
 
     function checkboxLimiter() {
       markedBoxCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
@@ -587,13 +607,9 @@
         unmarkedBoxCount[i].disabled = true;
     }
 
-    function send() {
-      document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(el, index) {
-        document.querySelectorAll("input.input"+index).value = el.getAttribute("headline");
-      })
 
-      myModal.hide();
-    }
+    
+
   </script>
 
 </body>
